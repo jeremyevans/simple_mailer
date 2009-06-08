@@ -1,0 +1,59 @@
+= simple_mailer
+
+simple_mailer is a very simple email library for ruby, with testing
+support.  It just uses ruby's standard net/smtp library to send out
+the emails.  Configuration is limited to setting the server that
+the email is sent to (defaults to localhost).  Testing support is
+limited to appending the emails that would have been sent to an
+array.
+
+simple_mailer can be installed with:
+
+    sudo gem install jeremyevans-simple_mailer \
+      --source=http://gems.github.com
+
+Source is available at github:
+http://github.com/jeremyevans/simple_mailer
+
+RDoc is available at: http://code.jeremyevans.net/doc/simple_mailer/
+
+== Usage
+
+There is no required configuration, you can use simple_mailer
+immediately:
+
+  require 'simple_mailer'
+  SimpleMailer.send_email('from@from.com', 'to@to.com', 'Subject',
+    'Body', 'HeaderKey'=>'HeaderValue')
+  
+SimpleMailer is a module that can be included in other classes:
+
+  class Mailer
+    include SimpleMailer
+
+    def initialize(subject, body)
+      @subject = subject
+      @body = body
+      self.smtp_server = 'smtp.example.com'
+    end
+
+    def email(from, to)
+      send_email(from, to, @subject, @body)
+    end
+  end
+  Mailer.new('Subject', 'Body').email('from@from.com', 'to@to.com')
+
+== Testing
+
+Testing support is probably the main reason to use simple_mailer over
+using net/smtp directly.  After you enter test mode, emails you send
+are available via the emails_sent option:
+
+  SimpleMailer.simple_mailer_test_mode!
+  SimpleMailer.emails_sent # []
+  SimpleMailer.send_email('from@from.com', 'to@to.com', 'S, 'B')
+  SimpleMailer.emails_sent # [[message, 'from@from.com', 'to@to.com']]
+
+== Author
+
+Jeremy Evans (code@jeremyevans.net)
