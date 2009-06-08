@@ -72,13 +72,13 @@ END_MESSAGE
   end
 
   it "should not send emails in test mode" do
-    @mailer.simple_mailer_test_mode!
+    SimpleMailer.test_mode!
     @mailer.send_email('from3@from.com', 'to3@to.com', 'Test Subject 3', 'Test Body 3', 'HeaderKey3'=>'HeaderValue3', :smtp_from=>'from@to.com', :smtp_to=>'to@from.com')
     $message.should == [nil, nil, nil]
   end
 
   it "should record emails sent to emails_sent in test mode" do
-    @mailer.simple_mailer_test_mode!
+    SimpleMailer.test_mode!
     @mailer.send_email('from3@from.com', 'to3@to.com', 'Test Subject 3', 'Test Body 3', 'HeaderKey3'=>'HeaderValue3', :smtp_from=>'from@to.com', :smtp_to=>'to@from.com')
     @mailer.emails_sent.should == [[<<END_MESSAGE, 'from@to.com', 'to@from.com']]
 From: from3@from.com
@@ -88,6 +88,7 @@ HeaderKey3: HeaderValue3
 
 Test Body 3
 END_MESSAGE
+    SimpleMailer.instance_variable_set(:@test_mode, false)
   end
 end
 

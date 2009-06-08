@@ -49,7 +49,7 @@ Testing support is probably the main reason to use simple_mailer over
 using net/smtp directly.  After you enter test mode, emails you send
 are available via the emails_sent option:
 
-  SimpleMailer.simple_mailer_test_mode!
+  SimpleMailer.test_mode!
   SimpleMailer.emails_sent # []
   SimpleMailer.send_email('from@from.com', 'to@to.com', 'S, 'B')
   SimpleMailer.emails_sent # [[message, 'from@from.com', 'to@to.com']]
