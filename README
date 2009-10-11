@@ -10,7 +10,7 @@ array.
 simple_mailer can be installed with:
 
     sudo gem install jeremyevans-simple_mailer \
-      --source=http://gems.github.com
+      --source=http://gemcutter.org
 
 Source is available at github:
 http://github.com/jeremyevans/simple_mailer
