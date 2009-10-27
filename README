@@ -51,7 +51,7 @@ are available via the emails_sent option:
 
   SimpleMailer.test_mode!
   SimpleMailer.emails_sent # []
-  SimpleMailer.send_email('from@from.com', 'to@to.com', 'S, 'B')
+  SimpleMailer.send_email('from@from.com', 'to@to.com', 'S', 'B')
   SimpleMailer.emails_sent # [[message, 'from@from.com', 'to@to.com']]
 
 == Author
