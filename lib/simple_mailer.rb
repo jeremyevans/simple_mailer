@@ -48,7 +48,7 @@ module SimpleMailer
   # Formats email message using from address, to address, subject, message,
   # and header hash.  Arguments:
   # * from - From address for the message
-  # * to - To address for the message
+  # * to - To address for the message (string or array of strings)
   # * subject - Subject of the message
   # * message - Body of the message
   # * headers - Headers for the message. Also, handles the following keys
@@ -64,6 +64,7 @@ module SimpleMailer
   def send_email(from, to, subject, message, headers={})
     smtp_from = headers.delete(:smtp_from) || from
     smtp_to = headers.delete(:smtp_to) || to
+    to = to.join(", ") if to.is_a?(Array)
     _send_email(<<END_OF_MESSAGE, smtp_from, smtp_to)
 From: #{from}
 To: #{to}
