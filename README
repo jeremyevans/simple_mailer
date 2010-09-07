@@ -14,8 +14,6 @@ simple_mailer can be installed with:
 Source is available at github:
 http://github.com/jeremyevans/simple_mailer
 
-RDoc is available at: http://code.jeremyevans.net/doc/simple_mailer/
-
 == Usage
 
 There is no required configuration, you can use simple_mailer
