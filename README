@@ -40,6 +40,21 @@ Or, you can include the SimpleMailer module in other classes:
   end
   Mailer.new('Subject', 'Body').email('from@from.com', 'to@to.com')
 
+== Special Headers
+
+There are four special headers that simple_mailer processes:
+
+:smtp_to :: Override the actual SMTP recipients without modifying
+            the message.
+:smtp_from :: Override the actual STMP sender without modifying
+              the message.
+:cc :: Add a recipient to the message and include a CC header
+       with that recipient.
+:bcc :: Add an recipient to the message without including that
+        information in the message headers.
+
+All other headers are used verbatim in the message.
+
 == Testing
 
 Testing support is probably the main reason to use simple_mailer over

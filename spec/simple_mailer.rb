@@ -47,6 +47,29 @@ Test Body 2
 END_MESSAGE
   end
 
+  it "should recognize the special :cc header" do
+    @mailer.send_email('from3@from.com', 'to3@to.com', 'Test Subject 3', 'Test Body 3', :cc=>'cc3@to.com')
+    $message.should == [<<END_MESSAGE, 'from3@from.com', ['to3@to.com', 'cc3@to.com'], 'localhost']
+From: from3@from.com
+To: to3@to.com
+Subject: Test Subject 3
+CC: cc3@to.com
+
+Test Body 3
+END_MESSAGE
+  end
+
+  it "should recognize the special :bcc header" do
+    @mailer.send_email('from3@from.com', 'to3@to.com', 'Test Subject 3', 'Test Body 3', :bcc=>'cc3@to.com')
+    $message.should == [<<END_MESSAGE, 'from3@from.com', ['to3@to.com', 'cc3@to.com'], 'localhost']
+From: from3@from.com
+To: to3@to.com
+Subject: Test Subject 3
+
+Test Body 3
+END_MESSAGE
+  end
+
   it "should recognize the special :smtp_from and :smtp_to headers" do
     @mailer.send_email('from3@from.com', 'to3@to.com', 'Test Subject 3', 'Test Body 3', 'HeaderKey3'=>'HeaderValue3', :smtp_from=>'from@to.com', :smtp_to=>'to@from.com')
     $message.should == [<<END_MESSAGE, 'from@to.com', 'to@from.com', 'localhost']
@@ -57,6 +80,12 @@ HeaderKey3: HeaderValue3
 
 Test Body 3
 END_MESSAGE
+  end
+
+  it "should not modify input hash" do
+    h = {:smtp_to=>'to@to.com'}
+    @mailer.send_email('from3@from.com', 'to3@to.com', 'Test Subject 3', 'Test Body 3', h)
+    h.should == {:smtp_to=>'to@to.com'}
   end
 
   it "should allow the setting of smtp server" do

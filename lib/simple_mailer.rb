@@ -62,8 +62,17 @@ module SimpleMailer
   # headers do not have an carriage returns or line endings.  Otherwise,
   # it's possible to inject arbitrary headers or body content.
   def send_email(from, to, subject, message, headers={})
+    headers = headers.dup
     smtp_from = headers.delete(:smtp_from) || from
     smtp_to = headers.delete(:smtp_to) || to
+    if cc = headers.delete(:cc)
+      headers['CC'] = cc
+      smtp_to = Array(smtp_to) + Array(cc)
+    end
+    if bcc = headers.delete(:bcc)
+      smtp_to = Array(smtp_to) + Array(bcc)
+    end
+
     to = to.join(", ") if to.is_a?(Array)
     _send_email(<<END_OF_MESSAGE, smtp_from, smtp_to)
 From: #{from}
