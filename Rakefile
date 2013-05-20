@@ -10,7 +10,7 @@ Rake::RDocTask.new do |rdoc|
   rdoc.options += ["--quiet", "--line-numbers", "--inline-source"]
   rdoc.main = "README"
   rdoc.title = "Simple email library with testing support"
-  rdoc.rdoc_files.add ["README", "LICENSE", "lib/**/*.rb"]
+  rdoc.rdoc_files.add ["README", "MIT-LICENSE", "lib/**/*.rb"]
 end
 
 desc "Package into gem"
