@@ -2,6 +2,17 @@
 require File.join(File.dirname(File.dirname(__FILE__)), '/lib/simple_mailer')
 Object.send(:remove_const, :Net)
 
+if defined?(RSpec)
+  require 'rspec/version'
+  if RSpec::Version::STRING >= '2.11.0'
+    RSpec.configure do |config|
+      config.expect_with :rspec do |c|
+        c.syntax = :should
+      end
+    end
+  end
+end
+
 $message = [nil, nil, nil]
 module Net
   class SMTP
