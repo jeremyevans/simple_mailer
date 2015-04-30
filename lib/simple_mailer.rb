@@ -15,6 +15,7 @@ module SimpleMailer
   extend self
 
   DEFAULT_SMTP_HOST = 'localhost'.freeze
+  DEFAULT_SMTP_DOMAIN = 'localhost'.freeze
 
   # The array of emails sent
   def self.emails_sent
@@ -37,6 +38,16 @@ module SimpleMailer
 
   # The smtp server to sent email to
   attr_accessor :smtp_server
+
+  # Custom SMTP configuration for any service (taken from the "mail" gem)
+  def smtp_settings
+    @smtp_settings ||= {
+      :address              => smtp_server || DEFAULT_SMTP_HOST,
+      :port                 => 25,
+      :enable_starttls_auto => true,
+      :domain               => DEFAULT_SMTP_DOMAIN,
+    }
+  end
   
   # The emails sent in test mode.  Is an array of arrays.  Each
   # element array is a array of three elements, the message, from address,
@@ -91,7 +102,9 @@ END_OF_MESSAGE
     if SimpleMailer.test_mode?
       test_mode_send_email(msg, from, to)
     else
-      Net::SMTP.start(smtp_server || DEFAULT_SMTP_HOST){|s| s.send_message(msg, from, to)}
+      smtp.start(*smtp_settings.values_at(:domain, :user_name, :password, :authentication)) do |s|
+        s.send_message(msg, from, to)
+      end
     end
   end
 
@@ -99,5 +112,12 @@ END_OF_MESSAGE
   # array.  
   def test_mode_send_email(msg, from, to)
     emails_sent << [msg, from, to]
+  end
+
+  def smtp
+    Net::SMTP.new(*smtp_settings.values_at(:address, :port)).tap do |smtp|
+      smtp.enable_starttls_auto unless smtp_settings[:enable_starttls_auto] == false
+      smtp.enable_tls if smtp_settings[:tls] || smtp_settings[:ssl]
+    end
   end
 end

@@ -7,16 +7,29 @@ require 'minitest/autorun'
 $message = [nil, nil, nil]
 module Net
   class SMTP
-    class Mock
-      def initialize(host)
-        @host = host
-      end
-      def send_message(msg, from, to)
-        $message = [msg, from, to, @host]
-      end
+    attr_reader :address, :port, :domain, :user_name, :password, :authentication,
+      :starttls_auto, :tls
+
+    def initialize(address, port = nil)
+      @address, @port = address, port
     end
-    def self.start(host, *args)
-      yield(Mock.new(host))
+
+    def enable_starttls_auto
+      @starttls_auto = true
+    end
+
+    def enable_tls
+      @tls = true
+    end
+
+    def start(domain = nil, user_name = nil, password = nil, authentication = nil)
+      @domain, @user_name, @password, @authentication = domain, user_name, password, authentication
+      yield self
+    end
+
+    def send_message(msg, from, to)
+      $message = [msg, from, to, @address]
+      self
     end
   end
 end
@@ -29,6 +42,7 @@ module SimpleMailerSpecs
   end
   after do
     @mailer.smtp_server = nil
+    @mailer.instance_variable_set(:@smtp_settings, nil)
     SimpleMailer.instance_variable_set(:@test_mode, false)
   end
 
@@ -126,6 +140,44 @@ HeaderKey3: HeaderValue3
 Test Body 3
 END_MESSAGE
     SimpleMailer.instance_variable_set(:@test_mode, false)
+  end
+
+  it "should give proper default smtp settings" do
+    @mailer.send(:smtp).address.must_equal 'localhost'
+    @mailer.send(:smtp).port.must_equal 25
+    @mailer.send(:smtp).starttls_auto.must_equal true
+
+    smtp = @mailer.send_email('from@from.com', 'to@to.com', 'Test Subject', 'Test Body')
+    smtp.domain.must_equal 'localhost'
+  end
+
+  it "should take smtp_server as the address" do
+    @mailer.smtp_server = 'blah.com'
+    @mailer.send(:smtp).address.must_equal 'blah.com'
+  end
+
+  it "should have configurable smtp settings" do
+    @mailer.smtp_settings.update(
+      :address              => 'smtp.gmail.com',
+      :port                 => 587,
+      :user_name            => 'bob',
+      :password             => 'secret',
+      :domain               => 'mydomain.com',
+      :authentication       => :plain,
+      :enable_starttls_auto => false,
+      :tls                  => true,
+    )
+
+    @mailer.send(:smtp).address.must_equal 'smtp.gmail.com'
+    @mailer.send(:smtp).port.must_equal 587
+    @mailer.send(:smtp).starttls_auto.must_equal nil
+    @mailer.send(:smtp).tls.must_equal true
+
+    smtp = @mailer.send_email('from@from.com', 'to@to.com', 'Test Subject', 'Test Body')
+    smtp.domain.must_equal 'mydomain.com'
+    smtp.user_name.must_equal 'bob'
+    smtp.password.must_equal 'secret'
+    smtp.authentication.must_equal :plain
   end
 end
 

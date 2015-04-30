@@ -55,6 +55,19 @@ There are four special headers that simple_mailer processes:
 
 All other headers are used verbatim in the message.
 
+== Configuration
+
+You can pass in options just like with the Mail gem.
+
+  SimpleMailer.smtp_settings.update(
+    :address => "smtp.gmail.com",
+    :port => 587,
+    :domain => "localhost",
+    :user_name => "bob",
+    :password => "secret",
+    :authentication => :plain,
+  )
+
 == Testing
 
 Testing support is probably the main reason to use simple_mailer over
