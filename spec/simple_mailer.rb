@@ -165,7 +165,7 @@ END_MESSAGE
       :domain               => 'mydomain.com',
       :authentication       => :plain,
       :enable_starttls_auto => false,
-      :tls                  => true,
+      :tls                  => true
     )
 
     @mailer.send(:smtp).address.must_equal 'smtp.gmail.com'
