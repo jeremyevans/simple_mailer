@@ -170,7 +170,7 @@ END_MESSAGE
 
     @mailer.send(:smtp).address.must_equal 'smtp.gmail.com'
     @mailer.send(:smtp).port.must_equal 587
-    @mailer.send(:smtp).starttls_auto.must_equal nil
+    @mailer.send(:smtp).starttls_auto.must_be_nil
     @mailer.send(:smtp).tls.must_equal true
 
     smtp = @mailer.send_email('from@from.com', 'to@to.com', 'Test Subject', 'Test Body')
