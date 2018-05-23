@@ -8,6 +8,5 @@ spec = Gem::Specification.new do |s|
   s.files = ["README", "MIT-LICENSE", "lib/simple_mailer.rb", 'spec/simple_mailer.rb']
   s.extra_rdoc_files = ["MIT-LICENSE"]
   s.require_paths = ["lib"]
-  s.has_rdoc = true
   s.rdoc_options = %w'--inline-source --line-numbers README lib'
 end
