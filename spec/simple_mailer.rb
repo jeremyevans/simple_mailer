@@ -2,6 +2,7 @@ require File.join(File.dirname(File.dirname(__FILE__)), '/lib/simple_mailer')
 Object.send(:remove_const, :Net)
 
 gem 'minitest'
+ENV['MT_NO_PLUGINS'] = '1' # Work around stupid autoloading of plugins
 require 'minitest/autorun'
 
 $message = [nil, nil, nil]
