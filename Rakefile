@@ -20,7 +20,13 @@ end
 
 desc "Run specs"
 task :spec do
-  sh %{#{FileUtils::RUBY} #{"-w" if RUBY_VERSION >= '3'} -I lib spec/*.rb}
+  sh %{#{FileUtils::RUBY} #{"-w" if RUBY_VERSION >= '3'} spec/simple_mailer.rb}
 end
 
 task :default => :spec
+
+desc "Run specs with coverage"
+task :spec_cov do
+  ENV['COVERAGE'] = '1'
+  sh %{#{FileUtils::RUBY} spec/simple_mailer.rb}
+end

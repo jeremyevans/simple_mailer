@@ -1,3 +1,14 @@
+if ENV.delete('COVERAGE')
+  require 'simplecov'
+
+  SimpleCov.start do
+    enable_coverage :branch
+    add_filter "/spec/"
+    add_group('Missing'){|src| src.covered_percent < 100}
+    add_group('Covered'){|src| src.covered_percent == 100}
+  end
+end
+
 require File.join(File.dirname(File.dirname(__FILE__)), '/lib/simple_mailer')
 Object.send(:remove_const, :Net)
 
@@ -52,6 +63,17 @@ module SimpleMailerSpecs
     $message.must_equal [<<END_MESSAGE, 'from1@from.com', 'to1@to.com', 'localhost']
 From: from1@from.com
 To: to1@to.com
+Subject: Test Subject 1
+
+Test Body 1
+END_MESSAGE
+  end
+
+  it "should send email to an array of recipients" do
+    @mailer.send_email('from1@from.com', %w'to1@to.com to2@to.com', 'Test Subject 1', 'Test Body 1')
+    $message.must_equal [<<END_MESSAGE, 'from1@from.com', %w'to1@to.com to2@to.com', 'localhost']
+From: from1@from.com
+To: to1@to.com, to2@to.com
 Subject: Test Subject 1
 
 Test Body 1
