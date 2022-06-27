@@ -1,21 +1,16 @@
-require 'rake'
+require "rdoc/task"
 
-RDOC_OPTS = ["--quiet", "--line-numbers", "--inline-source"]
-rdoc_task_class = begin
-  require "rdoc/task"
-  RDOC_OPTS.concat(['-f', 'hanna'])
-  RDoc::Task
-rescue LoadError
-  require "rake/rdoctask"
-  Rake::RDocTask
-end
-
-rdoc_task_class.new do |rdoc|
+RDoc::Task.new do |rdoc|
   rdoc.rdoc_dir = "rdoc"
-  rdoc.options += RDOC_OPTS
-  rdoc.main = "README"
-  rdoc.title = "Simple email library with testing support"
-  rdoc.rdoc_files.add ["README", "MIT-LICENSE", "lib/**/*.rb"]
+  rdoc.options += ["--quiet", "--line-numbers", "--inline-source", '--title', 'Simple email library with testing support', '--main', 'README']
+
+  begin
+    gem 'hanna-nouveau'
+    rdoc.options += ['-f', 'hanna']
+  rescue Gem::LoadError
+  end
+
+  rdoc.rdoc_files.add %w"README MIT-LICENSE lib/**/*.rb"
 end
 
 desc "Package into gem"
