@@ -5,7 +5,7 @@ RDoc::Task.new do |rdoc|
   rdoc.options += ["--quiet", "--line-numbers", "--inline-source", '--title', 'Simple email library with testing support', '--main', 'README']
 
   begin
-    gem 'hanna-nouveau'
+    gem 'hanna'
     rdoc.options += ['-f', 'hanna']
   rescue Gem::LoadError
   end
