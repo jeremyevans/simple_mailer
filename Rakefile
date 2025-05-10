@@ -1,16 +1,23 @@
-require "rdoc/task"
-
-RDoc::Task.new do |rdoc|
-  rdoc.rdoc_dir = "rdoc"
-  rdoc.options += ["--quiet", "--line-numbers", "--inline-source", '--title', 'Simple email library with testing support', '--main', 'README']
+desc "Generate rdoc"
+task :rdoc do
+  rdoc_dir = "rdoc"
+  rdoc_opts = ["--line-numbers", "--inline-source", '--title', 'simple_mailer: Simple email library with testing support']
 
   begin
     gem 'hanna'
-    rdoc.options += ['-f', 'hanna']
+    rdoc_opts.concat(['-f', 'hanna'])
   rescue Gem::LoadError
   end
 
-  rdoc.rdoc_files.add %w"README MIT-LICENSE lib/**/*.rb"
+  rdoc_opts.concat(['--main', 'README', "-o", rdoc_dir] +
+    %w"README MIT-LICENSE" +
+    Dir["lib/**/*.rb"]
+  )
+
+  FileUtils.rm_rf(rdoc_dir)
+
+  require "rdoc"
+  RDoc::RDoc.new.document(rdoc_opts)
 end
 
 desc "Package into gem"
