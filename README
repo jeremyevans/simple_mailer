@@ -1,7 +1,7 @@
 = simple_mailer
 
 simple_mailer is a very simple email library for ruby, with testing
-support.  It just uses ruby's standard net/smtp library to send out
+support.  It uses ruby's standard net/smtp library to send
 the emails.  Configuration is limited to setting the server that
 the email is sent to (defaults to localhost).  Testing support is
 limited to appending the emails that would have been sent to an
@@ -9,7 +9,7 @@ array.
 
 simple_mailer can be installed with:
 
-    sudo gem install simple_mailer
+  gem install simple_mailer
 
 Source is available at github:
 http://github.com/jeremyevans/simple_mailer
